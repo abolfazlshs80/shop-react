@@ -1,5 +1,5 @@
 export interface PagedResult<TItem> {
-    items: TItem[];
+    list: TItem[];
     pageNumber: number;
     pageSize: number;
     totalCount: number;
