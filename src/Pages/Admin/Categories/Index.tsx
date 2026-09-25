@@ -5,6 +5,7 @@ import type { GetAllCategoryResponse } from "../../../Service/api/Categories/cat
 import { CategoryService } from "../../../Service/api/Categories/category.service";
 import alertService from "../../../Hooks/alertService";
 import { handleApiError } from "../../../Service/api/handleApiError";
+import { getFileUrl } from "../../../Utils/getFileUrl";
 
 export default function ListCategoriesPage() {
   const [error, setError] = useState("");
@@ -20,6 +21,7 @@ export default function ListCategoriesPage() {
 
       var result = await service.getAll();
       setCategories(result.data?.list ?? []);
+      console.log(result.data?.list);
     } catch (err) {
       const message = handleApiError(err);
 
@@ -59,7 +61,9 @@ export default function ListCategoriesPage() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">مدیریت دسته بندیها</h1>
+          <h1 className="text-2xl font-bold text-slate-900">
+            مدیریت دسته بندیها
+          </h1>
 
           <p className="mt-1 text-sm text-slate-500">
             فهرست دسته بندی های ثبت‌شده در فروشگاه
@@ -89,7 +93,9 @@ export default function ListCategoriesPage() {
         </div>
       ) : categories.length === 0 ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-          <p className="font-medium text-slate-700">هنوز دسته بندیی ثبت نشده است.</p>
+          <p className="font-medium text-slate-700">
+            هنوز دسته بندیی ثبت نشده است.
+          </p>
 
           <p className="mt-1 text-sm text-slate-500">
             با انتخاب «افزودن دسته بندی» اولین دسته بندی را ثبت کنید.
@@ -107,8 +113,9 @@ export default function ListCategoriesPage() {
                   <th className="px-6 py-3 text-xs font-semibold text-slate-600">
                     نام دسته بندی
                   </th>
-
-
+                  <th className="px-6 py-3 text-xs font-semibold text-slate-600">
+                    تصویر
+                  </th>
 
                   <th className="px-6 py-3 text-xs font-semibold text-slate-600">
                     عملیات
@@ -126,7 +133,13 @@ export default function ListCategoriesPage() {
                       {cate.title}
                     </td>
 
-
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900">
+                      <img
+                        src={getFileUrl(cate.image)}
+                        alt={cate.title}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                    </td>
 
                     <td className="whitespace-nowrap px-6 py-4 text-sm">
                       <div className="flex items-center gap-4">

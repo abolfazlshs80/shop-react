@@ -9,10 +9,13 @@ import {
 } from "../../../Service/api/Categories/category.types";
 import { CategoryService } from "../../../Service/api/Categories/category.service";
 import CategorySelect from "../../../Components/CategorySelect";
+import { FileStoreService } from "../../../Service/api/FileStores/fileStore.service";
+import { FileStoreCategory } from "../../../Service/api/FileStores/fileStore.types";
 
 export default function CreateCategoryPage() {
   const navigate = useNavigate();
   const service = new CategoryService();
+  const fileStoreService = new FileStoreService();
   const [form, setForm] = useState<CreateCategoryRequest>({
     parentId: null,
     title: "",
@@ -26,6 +29,7 @@ export default function CreateCategoryPage() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const loadCategories = async () => {
     try {
       setError("");
@@ -48,7 +52,7 @@ export default function CreateCategoryPage() {
   // پیشنهاد می‌شود از این نوع استفاده کنید
   const handleChange = (
     field: keyof CreateCategoryRequest,
-    value: string | number | null | boolean,
+    value: string | number | null | boolean | File,
   ) => {
     setForm((prev) => ({
       ...prev,
@@ -64,16 +68,35 @@ export default function CreateCategoryPage() {
       return;
     }
 
-    console.log(form);
+    let fileId:number|undefined;
     try {
       setLoading(true);
 
+  
+      if (selectedFile) {
+        const resultFile = await fileStoreService.create({
+          category: FileStoreCategory.Category,
+          file: selectedFile,
+        });
+        fileId=resultFile?.data?.id;
+        console.log(resultFile.data);
+
+        setForm((prev) => ({
+          ...prev,
+          image: resultFile?.data?.path,
+        }));
+      }
+
+      console.log(form);
       await service.create(form);
 
       alertService.success("دسته بندی با موفقیت ثبت شد");
 
       navigate("/admin/Category");
     } catch (err) {
+      if(selectedFile &&fileId){
+        await fileStoreService.delete(fileId);
+      }
       alertService.error(handleApiError(err));
     } finally {
       setLoading(false);
@@ -133,6 +156,22 @@ export default function CreateCategoryPage() {
               type="text"
               value={form.urlName ?? ""}
               onChange={(e) => handleChange("urlName", e.target.value)}
+              placeholder="samsung"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              تصویر
+            </label>
+
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setSelectedFile(file);
+              }}
               placeholder="samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />

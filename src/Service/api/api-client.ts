@@ -75,21 +75,42 @@ export class ApiClient {
     return response.data;
   }
 
-  async post<TData, TBody>(
-    path: string,
-    body: TBody
-  ): Promise<ApiResponse<TData>> {
-    const response = await this.client.post<ApiResponse<TData>>(path, body);
-    return response.data;
-  }
+  // async post<TData, TBody>(
+  //   path: string,
+  //   body: TBody
+  // ): Promise<ApiResponse<TData>> {
+  //   const response = await this.client.post<ApiResponse<TData>>(path, body);
+  //   return response.data;
+  // }
 
-  async put<TData, TBody>(
-    path: string,
-    body: TBody
-  ): Promise<ApiResponse<TData>> {
-    const response = await this.client.put<ApiResponse<TData>>(path, body);
-    return response.data;
-  }
+  // async put<TData, TBody>(
+  //   path: string,
+  //   body: TBody
+  // ): Promise<ApiResponse<TData>> {
+  //   const response = await this.client.put<ApiResponse<TData>>(path, body);
+  //   return response.data;
+  // }
+
+  // در فایل api-client.ts این دو متد را به این صورت آپدیت کنید:
+
+async post<TData, TBody>(
+  path: string,
+  body: TBody,
+  config?: AxiosRequestConfig // اضافه شد
+): Promise<ApiResponse<TData>> {
+  const response = await this.client.post<ApiResponse<TData>>(path, body, config);
+  return response.data;
+}
+
+async put<TData, TBody>(
+  path: string,
+  body: TBody,
+  config?: AxiosRequestConfig // اضافه شد
+): Promise<ApiResponse<TData>> {
+  const response = await this.client.put<ApiResponse<TData>>(path, body, config);
+  return response.data;
+}
+
 
   async delete<TData = void>(
     path: string,
@@ -98,4 +119,6 @@ export class ApiClient {
     const response = await this.client.delete<ApiResponse<TData>>(path, config);
     return response.data;
   }
+
+  
 }
