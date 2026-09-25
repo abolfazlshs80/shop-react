@@ -1,6 +1,6 @@
 // components/DeleteButton.tsx
 import React, { useState } from "react";
-import alertService from "../Service/alertService";
+import alertService from "../Hooks/alertService";
 import { handleApiError } from "../Service/api/handleApiError";
 
 

@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { handleApiError } from "../../../Service/api/handleApiError";
-import alertService from "../../../Service/alertService";
+import alertService from "../../../Hooks/alertService";
 
 import { CategoryService } from "../../../Service/api/Categories/category.service";
 import type { UpdateCategoryRequest } from "../../../Service/api/Categories/category.types";
+import CategorySelect from "../../../Components/CategorySelect";
 
 export default function EditCategoryPage() {
   const { id } = useParams<{ id: string }>();
@@ -62,7 +63,7 @@ export default function EditCategoryPage() {
 
   const handleChange = (
     field: keyof UpdateCategoryRequest,
-    value: string
+    value: string | number | null | boolean,
   ) => {
     setForm((prev) => ({
       ...prev,
@@ -165,6 +166,19 @@ export default function EditCategoryPage() {
               }
               placeholder="samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              دسته‌بندی اصلی
+            </label>
+
+            <CategorySelect
+              selectedCategoryId={form.parentId ?? undefined}
+              onChange={(value) => {
+                handleChange("parentId", value ? Number(value) : null);
+              }}
             />
           </div>
 

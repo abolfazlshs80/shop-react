@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { BrandService } from "../../../Service/api/brands/brand.service";
 import { handleApiError } from "../../../Service/api/handleApiError";
 import type { Brand } from "../../../Service/api/brands/brand.types";
-import alertService from "../../../Service/alertService";
+import alertService from "../../../Hooks/alertService";
 
 export default function ListBrandPage() {
   const [brands, setBrands] = useState<Brand[]>([]);

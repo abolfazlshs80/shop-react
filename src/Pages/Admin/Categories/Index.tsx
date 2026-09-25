@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { GetAllCategoryResponse } from "../../../Service/api/Categories/category.types";
 import { CategoryService } from "../../../Service/api/Categories/category.service";
-import alertService from "../../../Service/alertService";
+import alertService from "../../../Hooks/alertService";
 import { handleApiError } from "../../../Service/api/handleApiError";
 
 export default function ListCategoriesPage() {

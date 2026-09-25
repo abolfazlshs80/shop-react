@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { BrandService } from "../../../Service/api/brands/brand.service";
 import { handleApiError } from "../../../Service/api/handleApiError";
-import alertService from "../../../Service/alertService";
+import alertService from "../../../Hooks/alertService";
 
 import type { CreateBrandRequest } from "../../../Service/api/brands/brand.types";
 
