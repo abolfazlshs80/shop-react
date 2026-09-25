@@ -7,7 +7,9 @@ import AdminLayout from './Layout/AdminLayout'
 import Admin_Home from './Pages/Admin/Home'
 import AboutPage from './Pages/Main/AboutPage'
 import MainPage from './Pages/Main/MainPage'
-import BrandPage from './Pages/Admin/Brands/Index'
+import ListBrandPage from './Pages/Admin/Brands/ListBrandPage'
+import CreateBrandPage from './Pages/Admin/Brands/CreateBrandPage'
+import EditBrandPage from './Pages/Admin/Brands/EditBrandPage'
 
 
  function App() {
@@ -25,7 +27,9 @@ import BrandPage from './Pages/Admin/Brands/Index'
         {/* صفحه‌هایی با layout پنل */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Admin_Home />} />
-          <Route path="/admin/brands" element={<BrandPage />} />
+          <Route path="/admin/brands/create" element={<CreateBrandPage />} />
+          <Route path="/admin/brands" element={<ListBrandPage />} />
+          <Route path="/admin/brands/edit/:id"element={<EditBrandPage />}/>
         </Route>
 
         {/* صفحه بدون layout */}

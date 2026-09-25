@@ -48,6 +48,20 @@ const alertService = {
       timerProgressBar: true,
     });
   },
+
+  async confirm(message: string): Promise<boolean> {
+    const result = await Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: message,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "بله، حذف کن",
+      cancelButtonText: "انصراف",
+      reverseButtons: true,
+    });
+
+    return result.isConfirmed;
+  },
 };
 
 export default alertService;
