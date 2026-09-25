@@ -7,12 +7,13 @@ import alertService from "../../../Hooks/alertService";
 import { CategoryService } from "../../../Service/api/Categories/category.service";
 import type { UpdateCategoryRequest } from "../../../Service/api/Categories/category.types";
 import CategorySelect from "../../../Components/CategorySelect";
+import { FileStoreService } from "../../../Service/api/FileStores/fileStore.service";
+import { FileStoreCategory } from "../../../Service/api/FileStores/fileStore.types";
 
 export default function EditCategoryPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  console.log(id);
   const [form, setForm] = useState<UpdateCategoryRequest>({
     parentId: null,
     title: "",
@@ -25,6 +26,9 @@ export default function EditCategoryPage() {
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileStoreService = new FileStoreService();
+
 
   useEffect(() => {
     if (!id) {
@@ -83,21 +87,39 @@ export default function EditCategoryPage() {
       return;
     }
 
+        let fileId:number|undefined;
     try {
       setSubmitting(true);
+      let updatedImagePath = form.image;
+      if (selectedFile) {
+        const resultFile = await fileStoreService.create({
+          category: FileStoreCategory.Category,
+          file: selectedFile,
+        });
+        fileId=resultFile?.data?.id;
+  
+
+        updatedImagePath=resultFile?.data?.path;
+        setForm((prev) => ({
+          ...prev,
+          image: updatedImagePath,
+        }));
+      }
 
       const service = new CategoryService();
 
-      await service.update( {
-        ...form,
-        title: form.title?.trim(),
-        
-      });
+
+
+    await service.update(form);
 
       alertService.success("دسته بندی با موفقیت ویرایش شد");
 
       navigate("/admin/Category");
     } catch (err) {
+
+      if(selectedFile &&fileId){
+        await fileStoreService.delete(fileId);
+      }
       alertService.error(handleApiError(err));
     } finally {
       setSubmitting(false);
@@ -182,6 +204,22 @@ export default function EditCategoryPage() {
             />
           </div>
 
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              تصویر
+            </label>
+
+            <input
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setSelectedFile(file);
+              }}
+              placeholder="samsung"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           {/* Buttons */}
 
           <div className="flex justify-end gap-3 pt-4">
