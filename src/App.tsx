@@ -10,6 +10,9 @@ import MainPage from './Pages/Main/MainPage'
 import ListBrandPage from './Pages/Admin/Brands/ListBrandPage'
 import CreateBrandPage from './Pages/Admin/Brands/CreateBrandPage'
 import EditBrandPage from './Pages/Admin/Brands/EditBrandPage'
+import ListCategoriesPage from './Pages/Admin/Categories/Index'
+import EditCategoryPage from './Pages/Admin/Categories/edit'
+import CreateCategoryPage from './Pages/Admin/Categories/create'
 
 
  function App() {
@@ -30,6 +33,10 @@ import EditBrandPage from './Pages/Admin/Brands/EditBrandPage'
           <Route path="/admin/brands/create" element={<CreateBrandPage />} />
           <Route path="/admin/brands" element={<ListBrandPage />} />
           <Route path="/admin/brands/edit/:id"element={<EditBrandPage />}/>
+
+          <Route path="/admin/category" element={<ListCategoriesPage />} />
+          <Route path="/admin/category/create" element={<CreateCategoryPage />} />
+          <Route path="/admin/category/edit/:id"element={<EditCategoryPage />}/>
         </Route>
 
         {/* صفحه بدون layout */}

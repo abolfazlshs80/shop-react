@@ -4,3 +4,8 @@ export interface PagedResult<TItem> {
     pageSize: number;
     totalCount: number;
 }
+
+export interface PageParams{
+    pageSize?:number|null,
+    pageNumber?:number|null,
+}

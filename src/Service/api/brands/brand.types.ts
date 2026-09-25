@@ -30,11 +30,4 @@ export interface BrandQuery {
 }
 
 
-// شکل پاسخ صفحه‌بندی در OpenAPI مشخص نشده است.
-// اگر API مستقیماً آرایه برمی‌گرداند، نتیجه را Brand[] تعریف کن.
-export interface PagedResult<TItem> {
-    items: TItem[];
-    pageNumber: number;
-    pageSize: number;
-    totalCount: number;
-}
+

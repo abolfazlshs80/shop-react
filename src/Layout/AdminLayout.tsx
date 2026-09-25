@@ -24,6 +24,10 @@ export default function AdminLayout() {
               برندها
             </NavLink>
 
+            <NavLink to="/admin/category" className={navLinkClass}>
+              دسته بندی ها
+            </NavLink>
+
             <NavLink to="/" className={navLinkClass}>
               بازگشت به سایت
             </NavLink>
