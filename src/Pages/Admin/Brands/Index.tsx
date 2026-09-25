@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { BrandService } from "../../../api/brands/brand.service";
-import { handleApiError } from "../../../api/handleApiError";
-import type { Brand } from "../../../api/brands/brand.types";
+import { BrandService } from "../../../Service/api/brands/brand.service";
+import { handleApiError } from "../../../Service/api/handleApiError";
+import type { Brand } from "../../../Service/api/brands/brand.types";
+
+import alertService from "../../../Service/alertService";
 
 
 
@@ -10,7 +12,7 @@ export default function BrandPage() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+      alertService.success("کاربر با موفقیت ایجاد شد");
   useEffect(() => {
     let cancelled = false;
 
