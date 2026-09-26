@@ -21,9 +21,9 @@ export type GetSelectListCategoryResponse = Pick<CategoryDto, "id" | "title" | "
 export interface CreateCategoryRequest{
         title: string,
         parentId: number| null,
-        image?: string| null,
-        imageInput?: File|null,
-        urlName: string| null,
+        image: string| null,
+        // imageInput?: File|null,
+        urlName: string,
         icon: string| null,
 }
 
