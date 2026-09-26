@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../Service/api/accounts/useAuth";
+import { useAuth } from "../Hooks/useAuth";
 
 
 

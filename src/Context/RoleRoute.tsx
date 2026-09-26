@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import type { RoleType } from "../Service/api/accounts/account.types";
-import { useAuth } from "../Service/api/accounts/useAuth";
+import { useAuth } from "../Hooks/useAuth";
 
 
 interface RoleRouteProps {

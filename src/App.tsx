@@ -15,7 +15,7 @@ import CreateCategoryPage from "./Pages/Admin/Categories/create";
 import LoginPage from "./Pages/Account/LoginPage";
 import ProtectedAdminRoute from "./Components/ProtectedAdminRoute";
 import { RoleType } from "./Service/api/accounts/account.types";
-import RoleRoute from "./Components/RoleRoute";
+import RoleRoute from "./Context/RoleRoute";
 
 function App() {
   return (

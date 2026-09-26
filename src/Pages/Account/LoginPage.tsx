@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import alertService from "../../Hooks/alertService";
-import { useAuth } from "../../Service/api/accounts/useAuth";
+import { useAuth } from "../../Hooks/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();

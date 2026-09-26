@@ -9,9 +9,9 @@ import {
   RoleType,
   type LoginRequest,
   type LoginResponse,
-} from "./account.types";
+} from "../Service/api/accounts/account.types";
 
-import { AuthService } from "./account.service";
+import { AuthService } from "../Service/api/accounts/account.service";
 
 interface AuthContextType {
   userId: number | null;
