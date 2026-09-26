@@ -5,16 +5,23 @@ export interface LoginRequest {
     password: string | null;
 }
 
-export interface RegisterRequest {
-    firstName: string | null;
-    lastName: string | null;
-    mobile: string | null;
-    password: string | null;
+export enum RoleType {
+  User =   "User",
+  Admin =   "Admin",
 }
 
-// در OpenAPI نوع data این endpoint مشخص نشده است.
-// این مدل را پس از دیدن پاسخ واقعی Login کامل کن.
-export interface LoginData {
-    token?: string;
-    [key: string]: unknown;
+export interface TokenResult {
+  token: string;
+  expireDate: string;
 }
+
+export interface AuthInfo {
+  id: number;
+  roles: RoleType[];
+}
+
+export interface LoginResponse {
+  tokenResult: TokenResult;
+  info: AuthInfo;
+}
+
