@@ -1,29 +1,41 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { BrandService } from "../../../Service/api/brands/brand.service";
 import { handleApiError } from "../../../Service/api/handleApiError";
 import alertService from "../../../Hooks/alertService";
 
-import type { UpdateBrandRequest } from "../../../Service/api/brands/brand.types";
+import {
+  UpdateBrandSchema,
+  type UpdateBrandForm,
+} from "../../../Service/api/brands/brand.schema";
 
 export default function EditBrandPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  console.log(id);
-  const [form, setForm] = useState<UpdateBrandRequest>({
-    parentId: null,
-    title: null,
-    image: null,
-    urlName: null,
-    icon: null,
-    id:Number(id)
-    
-  });
-
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UpdateBrandForm>({
+    resolver: zodResolver(UpdateBrandSchema),
+
+    defaultValues: {
+      id: Number(id),
+      parentId: null,
+      title: "",
+      image: null,
+      urlName: "",
+      icon: null,
+    },
+  });
 
   useEffect(() => {
     if (!id) {
@@ -42,13 +54,13 @@ export default function EditBrandPage() {
 
         const brand = result.data;
 
-        setForm({
+        reset({
+          id: Number(id),
           parentId: brand?.parentId ?? null,
           title: brand?.title ?? "",
           image: brand?.image ?? null,
-          urlName: brand?.urlName ?? null,
+          urlName: brand?.urlName ?? "",
           icon: brand?.icon ?? null,
-          id:Number(id)
         });
       } catch (err) {
         alertService.error(handleApiError(err));
@@ -58,39 +70,18 @@ export default function EditBrandPage() {
     };
 
     loadBrand();
-  }, [id, navigate]);
+  }, [id, navigate, reset]);
 
-  const handleChange = (
-    field: keyof UpdateBrandRequest,
-    value: string
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!id) {
-      return;
-    }
-
-    if (!form.title?.trim()) {
-      alertService.error("نام برند را وارد کنید");
-      return;
-    }
-
+  const onSubmit = async (data: UpdateBrandForm) => {
     try {
       setSubmitting(true);
 
       const brandService = new BrandService();
 
-      await brandService.update( {
-        ...form,
-        title: form.title?.trim(),
-        
+      await brandService.update({
+        ...data,
+        title: data.title.trim(),
+        urlName: data.urlName.trim(),
       });
 
       alertService.success("برند با موفقیت ویرایش شد");
@@ -115,8 +106,8 @@ export default function EditBrandPage() {
 
   return (
     <section dir="rtl" className="space-y-6">
-      {/* Header */}
 
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-slate-900">
           ویرایش برند
@@ -128,12 +119,13 @@ export default function EditBrandPage() {
       </div>
 
       {/* Form */}
-
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5"
+        >
 
           {/* نام برند */}
-
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
               نام برند
@@ -141,17 +133,19 @@ export default function EditBrandPage() {
 
             <input
               type="text"
-              value={form.title ?? ""}
-              onChange={(e) =>
-                handleChange("title", e.target.value)
-              }
+              {...register("title")}
               placeholder="مثلاً Samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
+
+            {errors.title && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.title.message}
+              </p>
+            )}
           </div>
 
           {/* URL */}
-
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
               نام در URL
@@ -159,23 +153,26 @@ export default function EditBrandPage() {
 
             <input
               type="text"
-              value={form.urlName ?? ""}
-              onChange={(e) =>
-                handleChange("urlName", e.target.value)
-              }
+              {...register("urlName")}
               placeholder="samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
+
+            {errors.urlName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.urlName.message}
+              </p>
+            )}
           </div>
 
           {/* Buttons */}
-
           <div className="flex justify-end gap-3 pt-4">
+
             <button
               type="button"
               onClick={() => navigate("/admin/brands")}
               disabled={submitting}
-              className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               انصراف
             </button>
@@ -189,6 +186,7 @@ export default function EditBrandPage() {
                 ? "در حال ذخیره..."
                 : "ذخیره تغییرات"}
             </button>
+
           </div>
         </form>
       </div>

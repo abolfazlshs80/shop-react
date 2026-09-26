@@ -1,49 +1,45 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { BrandService } from "../../../Service/api/brands/brand.service";
 import { handleApiError } from "../../../Service/api/handleApiError";
 import alertService from "../../../Hooks/alertService";
 
-import type { CreateBrandRequest } from "../../../Service/api/brands/brand.types";
+import {
+  CreateBrandSchema,
+  type CreateBrandForm,
+} from "../../../Service/api/brands/brand.schema";
 
 export default function CreateBrandPage() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState<CreateBrandRequest>({
-    parentId: null,
-    title: "",
-    image: null,
-    urlName: null,
-    icon: null,
-  });
-
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (
-    field: keyof CreateBrandRequest,
-    value: string
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateBrandForm>({
+    resolver: zodResolver(CreateBrandSchema),
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    defaultValues: {
+      parentId: null,
+      title: "",
+      image: null,
+      urlName: "",
+      icon: null,
+    },
+  });
 
-    if (!form.title?.trim()) {
-      alertService.error("نام برند را وارد کنید");
-      return;
-    }
-
+  const onSubmit = async (data: CreateBrandForm) => {
     try {
       setLoading(true);
 
       const brandService = new BrandService();
 
-      await brandService.create(form);
+      await brandService.create(data);
 
       alertService.success("برند با موفقیت ثبت شد");
 
@@ -57,6 +53,7 @@ export default function CreateBrandPage() {
 
   return (
     <section dir="rtl" className="space-y-6">
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-slate-900">
@@ -70,7 +67,10 @@ export default function CreateBrandPage() {
 
       {/* Form */}
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5"
+        >
 
           {/* نام برند */}
           <div>
@@ -80,13 +80,16 @@ export default function CreateBrandPage() {
 
             <input
               type="text"
-              value={form.title??""}
-              onChange={(e) =>
-                handleChange("title", e.target.value)
-              }
+              {...register("title")}
               placeholder="مثلاً Samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
+
+            {errors.title && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.title.message}
+              </p>
+            )}
           </div>
 
           {/* URL Name */}
@@ -97,17 +100,21 @@ export default function CreateBrandPage() {
 
             <input
               type="text"
-              value={form.urlName ?? ""}
-              onChange={(e) =>
-                handleChange("urlName", e.target.value)
-              }
+              {...register("urlName")}
               placeholder="samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
+
+            {errors.urlName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.urlName.message}
+              </p>
+            )}
           </div>
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-4">
+
             <button
               type="button"
               onClick={() => navigate("/admin/brands")}
@@ -123,6 +130,7 @@ export default function CreateBrandPage() {
             >
               {loading ? "در حال ثبت..." : "ثبت برند"}
             </button>
+
           </div>
         </form>
       </div>
