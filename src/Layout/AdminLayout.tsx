@@ -36,6 +36,11 @@ export default function AdminLayout() {
             دسته‌بندی ویژگی‌های محصول
             </NavLink>
 
+
+            <NavLink to="/admin/product-features" className={navLinkClass}>
+         ویژگی محصول
+            </NavLink>
+
             <NavLink to="/" className={navLinkClass}>
               بازگشت به سایت
             </NavLink>

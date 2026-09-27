@@ -22,6 +22,9 @@ import EditColorPage from "./Pages/Admin/Colors/edit";
 import CreateFeaturesCategoryPage from "./Pages/Admin/features-category/create";
 import ListFeaturesCategoriesPage from "./Pages/Admin/features-category/Index";
 import EditFeaturesCategoryPage from "./Pages/Admin/features-category/edit";
+import EditProductFeaturePage from "./Pages/Admin/ProductFeatures/edit";
+import CreateProductFeaturePage from "./Pages/Admin/ProductFeatures/create";
+import ListProductFeaturesPage from "./Pages/Admin/ProductFeatures/Index";
 
 function App() {
   return (
@@ -74,18 +77,18 @@ function App() {
 
 
 <Route
-  path="/admin/features-categories"
-  element={<ListFeaturesCategoriesPage />}
+  path="/admin/product-features"
+  element={<ListProductFeaturesPage />}
 />
 
 <Route
-  path="/admin/features-categories/create"
-  element={<CreateFeaturesCategoryPage />}
+  path="/admin/product-features/create"
+  element={<CreateProductFeaturePage />}
 />
 
 <Route
-  path="/admin/features-categories/edit/:id"
-  element={<EditFeaturesCategoryPage />}
+  path="/admin/product-features/edit/:id"
+  element={<EditProductFeaturePage />}
 />
           </Route>
         </Route>
