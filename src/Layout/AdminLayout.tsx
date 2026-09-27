@@ -28,6 +28,10 @@ export default function AdminLayout() {
               دسته بندی ها
             </NavLink>
 
+            <NavLink to="/admin/color" className={navLinkClass}>
+            رنگ  ها
+            </NavLink>
+
             <NavLink to="/" className={navLinkClass}>
               بازگشت به سایت
             </NavLink>

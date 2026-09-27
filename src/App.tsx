@@ -16,6 +16,9 @@ import LoginPage from "./Pages/Account/LoginPage";
 import ProtectedAdminRoute from "./Components/ProtectedAdminRoute";
 import { RoleType } from "./Service/api/accounts/account.types";
 import RoleRoute from "./Context/RoleRoute";
+import ListColorsPage from "./Pages/Admin/Colors/Index";
+import CreateColorPage from "./Pages/Admin/Categories/create";
+import EditColorPage from "./Pages/Admin/Colors/edit";
 
 function App() {
   return (
@@ -49,6 +52,21 @@ function App() {
             <Route
               path="/admin/category/edit/:id"
               element={<EditCategoryPage />}
+            />
+
+            <Route
+              path="/admin/Color"
+              element={<ListColorsPage />}
+            />
+
+            <Route
+              path="/admin/color/create"
+              element={<CreateColorPage />}
+            />
+
+            <Route
+              path="/admin/color/edit/:id"
+              element={<EditColorPage />}
             />
           </Route>
         </Route>
