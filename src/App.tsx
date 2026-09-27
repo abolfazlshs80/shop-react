@@ -25,6 +25,9 @@ import EditFeaturesCategoryPage from "./Pages/Admin/features-category/edit";
 import EditProductFeaturePage from "./Pages/Admin/ProductFeatures/edit";
 import CreateProductFeaturePage from "./Pages/Admin/ProductFeatures/create";
 import ListProductFeaturesPage from "./Pages/Admin/ProductFeatures/Index";
+import BannerIndexPage from "./Pages/Admin/Banner/Index";
+import CreateBannerPage from "./Pages/Admin/Banner/create";
+import EditBannerPage from "./Pages/Admin/Banner/edit";
 
 function App() {
   return (
@@ -89,6 +92,22 @@ function App() {
 <Route
   path="/admin/product-features/edit/:id"
   element={<EditProductFeaturePage />}
+/>
+
+
+<Route
+  path="/admin/banners"
+  element={<BannerIndexPage />}
+/>
+
+<Route
+  path="/admin/banners/create"
+  element={<CreateBannerPage />}
+/>
+
+<Route
+  path="/admin/banners/edit/:id"
+  element={<EditBannerPage />}
 />
           </Route>
         </Route>

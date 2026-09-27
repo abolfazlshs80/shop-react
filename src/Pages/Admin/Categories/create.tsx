@@ -1,66 +1,153 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import alertService from "../../../Hooks/alertService";
 import { handleApiError } from "../../../Service/api/handleApiError";
+import alertService from "../../../Hooks/alertService";
 
-import { ColorService } from "../../../Service/api/Colors/color.service";
-import { CreateColorSchema, type CreateColorForm } from "../../../Service/api/Colors/color.shcema";
+import {
+  type CreateCategoryRequest,
+  type GetSelectListCategoryResponse,
+} from "../../../Service/api/Categories/category.types";
 
+import { CategoryService } from "../../../Service/api/Categories/category.service";
+import CategorySelect from "../../../Components/CategorySelect";
 
-export default function CreateColorPage() {
+import { FileStoreService } from "../../../Service/api/FileStores/fileStore.service";
+import { FileStoreCategory } from "../../../Service/api/FileStores/fileStore.types";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { CreateCategorySchema } from "../../../Service/api/Categories/category.shcema";
+
+export default function CreateCategoryPage() {
+
   const navigate = useNavigate();
 
-  const service = new ColorService();
+  const service = new CategoryService();
+  const fileStoreService = new FileStoreService();
+
+  const [categories, setCategories] = useState<
+    GetSelectListCategoryResponse[]
+  >([]);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     formState: { errors },
-  } = useForm<CreateColorForm>({
-    resolver: zodResolver(CreateColorSchema),
+  } = useForm<CreateCategoryRequest>({
+    resolver: zodResolver(CreateCategorySchema),
 
     defaultValues: {
-      colorName: "",
-      colorCode: "#000000",
+      title: "",
+      parentId: null,
+      image: null,
+      urlName: "",
+      icon: null,
     },
   });
 
-  const colorCode = watch("colorCode");
 
-  const onSubmit = async (data: CreateColorForm) => {
+  const onSubmit = async (data: CreateCategoryRequest) => {
+
+    console.log(data)
+    let fileId: number | undefined;
+
     try {
+
+      setLoading(true);
+
+      // آپلود فایل
+      if (selectedFile) {
+
+        const resultFile = await fileStoreService.create({
+          category: FileStoreCategory.Category,
+          file: selectedFile,
+        });
+
+        fileId = resultFile?.data?.id;
+
+        data.image = resultFile?.data?.path ?? null;
+      }
+
+      // ارسال دسته بندی
       await service.create(data);
 
       alertService.success(
-        "رنگ با موفقیت ثبت شد"
+        "دسته بندی با موفقیت ثبت شد"
       );
 
-      navigate("/admin/Color");
+      navigate("/admin/Category");
 
     } catch (err) {
+
+      // اگر آپلود فایل موفق شد ولی ساخت Category شکست خورد
+      if (selectedFile && fileId) {
+        await fileStoreService.delete(fileId);
+      }
+
       alertService.error(
         handleApiError(err)
       );
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
 
+
+  const loadCategories = async () => {
+
+    try {
+
+      setError("");
+
+      const result = await service.getSelectList();
+
+      setCategories(result.data?.list ?? []);
+
+    } catch (err) {
+
+      const message = handleApiError(err);
+
+      setError(message);
+
+      alertService.error(message);
+
+    }
+  };
+
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+
   return (
+
     <section dir="rtl" className="space-y-6">
 
       {/* Header */}
 
       <div>
+
         <h1 className="text-2xl font-bold text-slate-900">
-          افزودن رنگ
+          افزودن دسته بندی
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          اطلاعات رنگ جدید را وارد کنید
+          اطلاعات دسته بندی جدید را وارد کنید
         </p>
+
       </div>
 
 
@@ -73,93 +160,107 @@ export default function CreateColorPage() {
           className="space-y-5"
         >
 
-          {/* Color Name */}
+          {/* Title */}
 
           <div>
 
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              نام رنگ
+              نام دسته بندی
             </label>
 
             <input
               type="text"
-              {...register("colorName")}
-              placeholder="مثلاً قرمز"
+              {...register("title")}
+              placeholder="مثلاً Samsung"
               className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
 
-            {errors.colorName && (
+            {errors.title && (
               <p className="mt-1 text-sm text-red-500">
-                {errors.colorName.message}
+                {errors.title.message}
               </p>
             )}
 
           </div>
 
 
-          {/* Color Code */}
+          {/* Parent Category */}
 
           <div>
 
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              کد رنگ
+              دسته‌بندی اصلی
             </label>
 
-            <div className="flex items-center gap-3">
+            <CategorySelect
+              selectedCategoryId={undefined}
+              onChange={(value) => {
 
-              <input
-                type="color"
-                value={
-                  /^#[0-9A-Fa-f]{6}$/.test(colorCode)
-                    ? colorCode
-                    : "#000000"
-                }
-                onChange={(e) => {
-                  const event = e.target.value;
-
-                  // چون از register استفاده می‌کنیم،
-                  // این input صرفاً برای انتخاب رنگ است.
-                  const input =
-                    document.querySelector<HTMLInputElement>(
-                      'input[name="colorCode"]'
-                    );
-
-                  if (input) {
-                    const nativeSetter =
-                      Object.getOwnPropertyDescriptor(
-                        HTMLInputElement.prototype,
-                        "value"
-                      )?.set;
-
-                    nativeSetter?.call(
-                      input,
-                      event
-                    );
-
-                    input.dispatchEvent(
-                      new Event("input", {
-                        bubbles: true,
-                      })
-                    );
+                setValue(
+                  "parentId",
+                  value ? Number(value) : null,
+                  {
+                    shouldValidate: true,
                   }
-                }}
-                className="h-11 w-16 cursor-pointer rounded-lg border border-slate-300 p-1"
-              />
+                );
 
-              <input
-                type="text"
-                {...register("colorCode")}
-                placeholder="#FF0000"
-                className="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 font-mono uppercase outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              />
+              }}
+            />
 
-            </div>
-
-            {errors.colorCode && (
+            {errors.parentId && (
               <p className="mt-1 text-sm text-red-500">
-                {errors.colorCode.message}
+                {errors.parentId.message}
               </p>
             )}
+
+          </div>
+
+
+          {/* URL Name */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              نام در URL
+            </label>
+
+            <input
+              type="text"
+              {...register("urlName")}
+              
+              placeholder="samsung"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            />
+
+            {errors.urlName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.urlName.message}
+              </p>
+            )}
+
+          </div>
+
+
+          {/* Image */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              تصویر
+            </label>
+
+            <input
+              type="file"
+              onChange={(e) => {
+
+                const file =
+                  e.target.files?.[0] ?? null;
+
+                setSelectedFile(file);
+
+              }}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            />
 
           </div>
 
@@ -171,7 +272,7 @@ export default function CreateColorPage() {
             <button
               type="button"
               onClick={() =>
-                navigate("/admin/Color")
+                navigate("/admin/Category")
               }
               className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
@@ -180,9 +281,12 @@ export default function CreateColorPage() {
 
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+              disabled={loading}
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              ثبت رنگ
+              {loading
+                ? "در حال ثبت..."
+                : "ثبت دسته بندی"}
             </button>
 
           </div>
