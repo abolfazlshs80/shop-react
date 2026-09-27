@@ -19,6 +19,9 @@ import RoleRoute from "./Context/RoleRoute";
 import ListColorsPage from "./Pages/Admin/Colors/Index";
 import CreateColorPage from "./Pages/Admin/Categories/create";
 import EditColorPage from "./Pages/Admin/Colors/edit";
+import CreateFeaturesCategoryPage from "./Pages/Admin/features-category/create";
+import ListFeaturesCategoriesPage from "./Pages/Admin/features-category/Index";
+import EditFeaturesCategoryPage from "./Pages/Admin/features-category/edit";
 
 function App() {
   return (
@@ -68,6 +71,22 @@ function App() {
               path="/admin/color/edit/:id"
               element={<EditColorPage />}
             />
+
+
+<Route
+  path="/admin/features-categories"
+  element={<ListFeaturesCategoriesPage />}
+/>
+
+<Route
+  path="/admin/features-categories/create"
+  element={<CreateFeaturesCategoryPage />}
+/>
+
+<Route
+  path="/admin/features-categories/edit/:id"
+  element={<EditFeaturesCategoryPage />}
+/>
           </Route>
         </Route>
 
