@@ -33,16 +33,19 @@ export default function AdminLayout() {
             </NavLink>
 
             <NavLink to="/admin/color" className={navLinkClass}>
-            رنگ  ها
+              رنگ ها
             </NavLink>
 
             <NavLink to="/admin/features-categories" className={navLinkClass}>
-            دسته‌بندی ویژگی‌های محصول
+              دسته‌بندی ویژگی‌های محصول
             </NavLink>
 
-
             <NavLink to="/admin/product-features" className={navLinkClass}>
-         ویژگی محصول
+              ویژگی محصول
+            </NavLink>
+
+            <NavLink to="/admin/products" className={navLinkClass}>
+              محصولات
             </NavLink>
 
             <NavLink to="/" className={navLinkClass}>
@@ -53,9 +56,7 @@ export default function AdminLayout() {
 
         <section className="flex min-w-0 flex-1 flex-col">
           <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6">
-            <span className="font-semibold text-slate-800">
-              مدیریت فروشگاه
-            </span>
+            <span className="font-semibold text-slate-800">مدیریت فروشگاه</span>
 
             <button
               type="button"

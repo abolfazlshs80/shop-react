@@ -26,6 +26,9 @@ import EditProductFeaturePage from "../../Pages/Admin/ProductFeatures/edit";
 import ListFeaturesCategoriesPage from "../../Pages/Admin/features-category/Index";
 import EditFeaturesCategoryPage from "../../Pages/Admin/features-category/edit";
 import CreateFeaturesCategoryPage from "../../Pages/Admin/features-category/create";
+import EditProductPage from "../../Pages/Admin/Products/edit";
+import CreateProductPage from "../../Pages/Admin/Products/create";
+import ProductIndexPage from "../../Pages/Admin/Products";
 
 export default function AdminRoutes() {
   return useRoutes([
@@ -150,6 +153,24 @@ export default function AdminRoutes() {
                 {
                   path: "edit/:id",
                   element: <EditProductFeaturePage />,
+                },
+              ],
+            },
+
+            {
+              path: "products",
+              children: [
+                {
+                  index: true,
+                  element: <ProductIndexPage />,
+                },
+                {
+                  path: "create",
+                  element: <CreateProductPage />,
+                },
+                {
+                  path: "edit/:id",
+                  element: <EditProductPage />,
                 },
               ],
             },
