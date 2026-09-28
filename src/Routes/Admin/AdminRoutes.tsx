@@ -23,11 +23,13 @@ import EditBannerPage from "../../Pages/Admin/Banner/edit";
 import ListProductFeaturesPage from "../../Pages/Admin/ProductFeatures/Index";
 import CreateProductFeaturePage from "../../Pages/Admin/ProductFeatures/create";
 import EditProductFeaturePage from "../../Pages/Admin/ProductFeatures/edit";
+import ListFeaturesCategoriesPage from "../../Pages/Admin/features-category/Index";
+import EditFeaturesCategoryPage from "../../Pages/Admin/features-category/edit";
+import CreateFeaturesCategoryPage from "../../Pages/Admin/features-category/create";
 
 export default function AdminRoutes() {
   return useRoutes([
     {
-      path: "/admin",
       element: <AdminRoute />,
       children: [
         {
@@ -110,6 +112,25 @@ export default function AdminRoutes() {
                 {
                   path: "edit/:id",
                   element: <EditBannerPage />,
+                },
+              ],
+            },
+
+            // Product Features
+            {
+              path: "features-categories",
+              children: [
+                {
+                  index: true,
+                  element: <ListFeaturesCategoriesPage />,
+                },
+                {
+                  path: "create",
+                  element: <CreateFeaturesCategoryPage />,
+                },
+                {
+                  path: "edit/:id",
+                  element: <EditFeaturesCategoryPage />,
                 },
               ],
             },

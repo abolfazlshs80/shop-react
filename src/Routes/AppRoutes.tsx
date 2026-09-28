@@ -12,13 +12,12 @@ export default function AppRoutes() {
     },
 
     {
-      path: "/*",
-      element: <MainRoutes />,
-    },
-
-    {
       path: "/admin/*",
       element: <AdminRoutes />,
+    },
+    {
+      path: "/*",
+      element: <MainRoutes />,
     },
   ]);
 }
